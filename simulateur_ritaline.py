@@ -7,7 +7,7 @@ st.title("🧠 Simulateur de concentration Ritaline LP")
 
 st.markdown("""
 Ce simulateur te permet d'estimer la concentration de Ritaline LP dans ton corps en fonction de tes prises (jusqu'à 3 par jour).
-- Le modèle utilise une estimation : **50% libération immédiate**, **50% prolongée**.
+- Le modèle utilise une estimation : **50% libération immédiate**, **50% libération prolongée**.
 - Les heures sont à entrer sous forme décimale (ex : 8.5 pour 8h30).
 """)
 
@@ -23,25 +23,27 @@ with col2:
     d2 = st.number_input("Dose prise 2 (mg)", value=20)
     d3 = st.number_input("Dose prise 3 (mg)", value=10)
 
-# Fonction de simulation avec combinaison immédiate + prolongée
+# Fonction réaliste de libération immédiate + prolongée
 
 def simulate_lp(dose, t0, hours):
     t = hours - t0
-    t[t < 0] = 0
+    t[t < 0] = 0  # pas de médicament avant la prise
 
-    # Libération immédiate : pic rapide qui retombe
-    immediate = (dose * 0.5) * np.exp(-t / 1.2)
+    # Immédiate : pic rapide, chute dans les 2-3h
+    immediate = (dose * 0.5) * (t / 1) * np.exp(-t / 1.5)
 
-    # Libération prolongée : monte lentement, redescend après 6-8h
-    extended = (dose * 0.5) * (t / 6)**2 * np.exp(-t / 5)
+    # Prolongée : monte doucement, pic vers 4-5h, redescend après 8-10h
+    extended = (dose * 0.5) * ((t / 5)**2) * np.exp(-t / 6)
 
     return immediate + extended
 
-# Calculs
+# Heures de la journée
 hours = np.arange(0, 24.25, 0.25)
+
+# Concentration totale
 total = simulate_lp(d1, h1, hours) + simulate_lp(d2, h2, hours) + simulate_lp(d3, h3, hours)
 
-# Affichage de la courbe
+# Affichage graphique
 st.header("📈 Courbe de concentration estimée")
 fig, ax = plt.subplots()
 ax.plot(hours, total, label="Concentration estimée (mg)", color="steelblue")
