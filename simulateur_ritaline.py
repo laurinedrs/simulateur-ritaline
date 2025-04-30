@@ -23,14 +23,18 @@ with col2:
     d2 = st.number_input("Dose prise 2 (mg)", value=20)
     d3 = st.number_input("Dose prise 3 (mg)", value=10)
 
-# Fonction de simulation réaliste
+# Fonction de simulation avec combinaison immédiate + prolongée
+
 def simulate_lp(dose, t0, hours):
     t = hours - t0
     t[t < 0] = 0
-    # Phase immédiate (50%) : rapide, douce décroissance
-    immediate = (dose * 0.5) * (t / 1) * np.exp(-t / 1.5)
-    # Phase prolongée (50%) : diffusion continue
-    extended = (dose * 0.5) * ((t / 6)**2) * np.exp(-t / 6)
+
+    # Libération immédiate : pic rapide qui retombe
+    immediate = (dose * 0.5) * np.exp(-t / 1.2)
+
+    # Libération prolongée : monte lentement, redescend après 6-8h
+    extended = (dose * 0.5) * (t / 6)**2 * np.exp(-t / 5)
+
     return immediate + extended
 
 # Calculs
