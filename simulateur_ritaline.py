@@ -25,28 +25,23 @@ with left_col:
     h3 = st.number_input("Heure prise 3", min_value=6.0, max_value=26.0, value=17.5, step=0.25)
     d3 = st.number_input("Dose prise 3 (mg)", value=10)
 
-# Fonction réaliste de libération immédiate + prolongée avec décroissance plus rapide
-def simulate_lp(dose, t0, hours):
-    t = hours - t0
-    t[t < 0] = 0
+    # Résumé affiché directement après la saisie
+    st.header("📊 Résumé")
+    hours = np.arange(6.0, 26.25, 0.25)
+    def simulate_lp(dose, t0, hours):
+        t = hours - t0
+        t[t < 0] = 0
+        immediate = (dose * 0.5) * (t / 0.5) * np.exp(-t / 1.2)
+        extended = (dose * 0.5) * ((t / 3)**2) * np.exp(-t / 3.5)
+        return immediate + extended
 
-    # Immédiate : pic rapide, chute vers 3h
-    immediate = (dose * 0.5) * (t / 0.5) * np.exp(-t / 1.2)
-
-    # Prolongée : pic vers 4h, effet sur 6–8h
-    extended = (dose * 0.5) * ((t / 3)**2) * np.exp(-t / 3.5)
-
-    return immediate + extended
-
-# Heures de la journée de 6h à 2h (26.0 en décimal)
-hours = np.arange(6.0, 26.25, 0.25)
-
-# Concentration totale
-total = simulate_lp(d1, h1, hours) + simulate_lp(d2, h2, hours) + simulate_lp(d3, h3, hours)
+    total = simulate_lp(d1, h1, hours) + simulate_lp(d2, h2, hours) + simulate_lp(d3, h3, hours)
+    st.write(f"**Concentration max estimée :** {np.max(total):.1f} mg vers {hours[np.argmax(total)]%24:.2f}h")
+    st.write(f"**Concentration à 20h :** {total[np.where(hours == 20.0)][0]:.1f} mg")
 
 with right_col:
     st.header("📈 Courbe de concentration estimée")
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(8, 4))
     ax.plot(hours, total, label="Concentration estimée (mg)", color="steelblue")
     ax.set_xlabel("Heure de la journée")
     ax.set_ylabel("mg dans le corps")
@@ -58,8 +53,3 @@ with right_col:
     ax.set_ylim(0, max(total) + 5)
     ax.legend()
     st.pyplot(fig)
-
-# Résumé en bas
-st.header("📊 Résumé")
-st.write(f"**Concentration max estimée :** {np.max(total):.1f} mg vers {hours[np.argmax(total)]%24:.2f}h")
-st.write(f"**Concentration à 20h :** {total[np.where(hours == 20.0)][0]:.1f} mg")
