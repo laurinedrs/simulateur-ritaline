@@ -1,4 +1,3 @@
-
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
@@ -24,18 +23,14 @@ with col2:
     d2 = st.number_input("Dose prise 2 (mg)", value=20)
     d3 = st.number_input("Dose prise 3 (mg)", value=10)
 
-# Fonction de simulation
+# Fonction de simulation réaliste
 def simulate_lp(dose, t0, hours):
     t = hours - t0
     t[t < 0] = 0
-    immediate = np.piecewise(t, [t < 1, (t >= 1) & (t <= 3), t > 3],
-                              [lambda h: h * (dose * 0.5),
-                               lambda h: (dose * 0.5) - ((h - 1) * (dose * 0.5) / 2),
-                               0])
-    extended = np.piecewise(t, [t < 2, (t >= 2) & (t <= 8), t > 8],
-                             [0,
-                              lambda h: (dose * 0.5) * (1 - np.cos((h - 2) / 6 * np.pi)) / 2,
-                              lambda h: (dose * 0.5) * np.exp(-(h - 8))])
+    # Phase immédiate (50%) : rapide, douce décroissance
+    immediate = (dose * 0.5) * (t / 1) * np.exp(-t / 1.5)
+    # Phase prolongée (50%) : diffusion continue
+    extended = (dose * 0.5) * ((t / 6)**2) * np.exp(-t / 6)
     return immediate + extended
 
 # Calculs
