@@ -29,11 +29,11 @@ def simulate_lp(dose, t0, hours):
     t = hours - t0
     t[t < 0] = 0  # pas de médicament avant la prise
 
-    # Immédiate : pic rapide, chute dans les 2-3h
-    immediate = (dose * 0.5) * (t / 1) * np.exp(-t / 1.5)
+    # Libération immédiate : rapide, effet sur ~3h
+    immediate = (dose * 0.5) * (t / 0.5) * np.exp(-t / 1.5)
 
-    # Prolongée : monte doucement, pic vers 4-5h, redescend après 8-10h
-    extended = (dose * 0.5) * ((t / 5)**2) * np.exp(-t / 6)
+    # Libération prolongée : pic vers 4h, effet sur ~8h
+    extended = (dose * 0.5) * ((t / 3)**2) * np.exp(-t / 4)
 
     return immediate + extended
 
