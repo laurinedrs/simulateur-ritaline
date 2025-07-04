@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 Ritalin LP Concentration Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧠 Ritalin LP Concentration Simulator</h1>
+            <p class="subtitle">
+                Estimate Ritalin concentration in your body based on your doses throughout the day.
+                The model uses realistic pharmacokinetics for both Immediate Release (IR) and Extended Release (ER) formulations.
+            </p>
+        </header>
+
+        <div class="main-content">
+            <div class="input-section">
+                <div class="card">
+                    <h2>🕒 Add Dose</h2>
+                    <form id="dose-form">
+                        <div class="form-group">
+                            <label for="time-input">Time of intake:</label>
+                            <input type="time" id="time-input" value="08:00" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dose-input">Dosage (mg):</label>
+                            <input type="number" id="dose-input" min="1" max="100" value="20" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="type-input">Type:</label>
+                            <select id="type-input" required>
+                                <option value="IR">Immediate Release (IR)</option>
+                                <option value="ER" selected>Extended Release (ER)</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Add Dose</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h2>📋 Current Doses</h2>
+                    <div id="doses-list" class="doses-list">
+                        <p class="empty-state">No doses added yet</p>
+                    </div>
+                    <button id="clear-all" class="btn-secondary" style="display: none;">Clear All</button>
+                </div>
+
+                <div class="card summary-card">
+                    <h2>📊 Summary</h2>
+                    <div id="summary">
+                        <div class="summary-item">
+                            <span class="label">Peak concentration:</span>
+                            <span id="peak-concentration">--</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">Peak time:</span>
+                            <span id="peak-time">--</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="label">Concentration at 20:00:</span>
+                            <span id="evening-concentration">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <div class="card chart-card">
+                    <h2>📈 Concentration Curve</h2>
+                    <div id="concentration-chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
