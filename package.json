@@ -1,0 +1,21 @@
+{
+  "name": "ritalin-concentration-simulator",
+  "version": "1.0.0",
+  "description": "A web application to simulate Ritalin concentration in the body over time",
+  "main": "index.html",
+  "scripts": {
+    "dev": "http-server . -p 3000 -o",
+    "start": "http-server . -p 3000"
+  },
+  "keywords": [
+    "ritalin",
+    "concentration",
+    "simulator",
+    "pharmacokinetics"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
